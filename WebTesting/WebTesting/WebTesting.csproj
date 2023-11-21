@@ -63,9 +63,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HomePage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearchPage.cs" />
     <Compile Include="Testing.cs" />
+    <Compile Include="UserPage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

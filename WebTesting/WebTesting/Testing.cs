@@ -13,31 +13,41 @@ namespace WebTesting
     [TestFixture]
     internal class Testing
     {
-        private EdgeDriver Driver;
+        private WebDriver Driver;
 
         [SetUp]
         public void Setup()
         {
             Driver = new EdgeDriver();
             Driver.Manage().Window.Maximize();
-            Driver.Navigate().GoToUrl("https://newgrounds.com");
         }
         [Test]
         public void testSearchBar()
         {
-            WebDriverWait waitForDownloadPage = new WebDriverWait(Driver, TimeSpan.FromSeconds(4));
-            var searchBar = waitForDownloadPage.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.Name("terms")));
-            searchBar.SendKeys("Dezmall\n");
+            HomePage homePage = new HomePage(Driver, TimeSpan.FromSeconds(4));
+            SearchPage searchPage = homePage.getPageOfSearchQuery("Dezmall\n");
 
-            var usersTab = waitForDownloadPage.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.CssSelector("#search-header-nav > div > a:nth-child(6)")));
-            usersTab.Click();
-
-            var listOfUsers = waitForDownloadPage.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementExists(By.ClassName("itemlist")));
-            var Users = listOfUsers.FindElements(By.XPath(".//*"));
+            searchPage.clickUsersTab();
 
             //Driver.Quit();
 
-            Assert.IsTrue(Users.ToList().Count > 0);
+            Assert.IsTrue(searchPage.getElementsOfSearchQuery().ToList().Count > 0);
+        }
+        [Test]
+        public void testRestrictedRules()
+        {
+            HomePage homePage = new HomePage(Driver, TimeSpan.FromSeconds(6));
+            SearchPage searchPage = homePage.getPageOfSearchQuery("QueenComplex\n");
+
+            searchPage.clickUsersTab();
+
+            UserPage userPage = searchPage.getUserPage("QueenComplex");
+
+            userPage.clickArtTab();
+
+            //Driver.Quit();
+
+            Assert.IsNotNull(userPage.getRestrictedArt());
         }
     }
 }
